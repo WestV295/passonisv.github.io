@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
+:root {
+    --bg-color: #0a0a0a;
+    --card-color: rgba(30, 30, 30, 0.7);
+    --text-primary: #f0f0f0;
+    --text-secondary: #8a8a8a;
+    --accent: #FF5555;
+    --glow: 0 0 10px rgba(255, 85, 85, 0.4);
+    --mansion-color: #9B59B6;
+    --mechanic-color: #3498DB;
+    --social-color: #00BFFF;
+    --estate-color: #2ECC71;
+    --gun-color: #FFA500;
+    --illegal-color: #E74C3C;
+    --car-color: #1ABC9C;
+}
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: url('https://i.ibb.co/ynVgnMJ1/Leonardo-Kino-XL-stylish-Black-man-in-purple-suit-holding-glas-0.jpgg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    position: relative;
+}
+
+/* ... rest of your CSS ... */
+
+/* Add all your CSS rules here exactly as they appear in your original file */
