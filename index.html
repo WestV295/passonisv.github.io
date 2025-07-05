@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passensis ROLEPLAY</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+        
+        :root {
+            --bg-color: #0a0a0a;
+            --card-color: rgba(30, 30, 30, 0.7);
+            --text-primary: #f0f0f0;
+            --text-secondary: #8a8a8a;
+            --accent: #FF5555;
+            --glow: 0 0 10px rgba(255, 85, 85, 0.4);
+            --mansion-color: #9B59B6;
+            --mechanic-color: #3498DB;
+            --social-color: #00BFFF;
+            --estate-color: #2ECC71;
+            --gun-color: #FFA500;
+            --illegal-color: #E74C3C;
+            --car-color: #1ABC9C;
+        }
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: url('https://i.ibb.co/ynVgnMJ1/Leonardo-Kino-XL-stylish-Black-man-in-purple-suit-holding-glas-0.jpgg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        /* Add cars category styles */
+        .cars-header { border-color: var(--car-color); }
+        .cars-header.active { border-left-color: var(--car-color); }
+        .cars-slot { border-color: var(--car-color); }
+        .cars-slot:hover { box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3); }
+        .cars-modal { border-color: var(--car-color); box-shadow: 0 0 20px var(--car-color); }
+
+        /* Ana içerik container */
+        .main-container {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(20, 20, 20, 0.4);
+            border-radius: 10px;
+            margin: 20px;
+            padding: 20px;
+            flex: 1;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-top: 20px;
+        }
+        
+        .neon-title {
+            display: inline-block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            padding: 10px 25px;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            box-shadow: 0 0 10px var(--accent), 
+                        inset 0 0 5px var(--accent);
+            animation: neonPulse 2s infinite alternate;
+            text-shadow: 0 0 5px var(--accent);
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .neon-title:hover {
+            transform: scale(1.03);
+            animation: neonPulse 1s infinite alternate, shake 0.5s ease infinite;
+        }
+
+        /* Animasyonlar */
+        @keyframes neonPulse {
+            0% {
+                box-shadow: 0 0 5px var(--accent), 
+                           inset 0 0 2px var(--accent),
+                           0 0 20px rgba(255, 85, 85, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 15px var(--accent), 
+                           inset 0 0 8px var(--accent),
+                           0 0 30px rgba(255, 85, 85, 0.4);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) scale(1.03); }
+            25% { transform: translateX(-2px) scale(1.03); }
+            75% { transform: translateX(2px) scale(1.03); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Kategori container */
+        .category-container {
+            margin: 0 auto 20px;
+            max-width: 600px;
+            background: rgba(17, 17, 17, 0.7);
+            border-radius: 8px;
+            padding: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        .category-bar {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        /* Kategori tabları */
+        .category-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            background-color: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .category-tab:hover {
+            background: rgba(255, 85, 85, 0.3) !important;
+            color: var(--accent);
+            transform: translateY(-2px);
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .category-tab.active {
+            background: rgba(255, 85, 85, 0.3) !important;
+            color: var(--accent);
+            box-shadow: 0 0 10px rgba(255, 85, 85, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 85, 85, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 85, 85, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 85, 85, 0); }
+        }
+        
+        /* Dinamik içerik */
+        .dynamic-content {
+            display: none;
+            animation: fadeIn 0.5s;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dynamic-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Sunucu bilgileri */
+        .server-info {
+            background: var(--card-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .info-title {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 5px;
+        }
+        
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        /* Kullanıcı kartları */
+        .user-card {
+            background: rgba(40, 40, 40, 0.7);
+            border-radius: 5px;
+            padding: 10px;
+            border-left: 2px solid var(--accent);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            transition: all 0.3s;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .user-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 85, 85, 0.2);
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .user-rank {
+            font-size: 0.75rem;
+            color: var(--accent);
+        }
+        
+        /* Donate bölümü */
+        .donate-section {
+            background: var(--card-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        /* Butonlar */
+        .donate-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            animation: pulse 2s infinite;
+        }
+        
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(255, 85, 85, 0.3);
+            animation: pulse 1s infinite;
+        }
+        
+        /* İstatistik kartları */
+        .stats-container {
+            display: flex;
+            gap: 12px;
+            padding: 15px 5px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            margin-bottom: 25px;
+        }
+        
+        .stats-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .stat-card {
+            min-width: 120px;
+            background: rgba(40, 40, 40, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+            box-shadow: 0 0 5px var(--accent);
+            animation: neonPulse 2s infinite alternate;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3), var(--glow);
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 15px 0 5px 0;
+            background: linear-gradient(to right, #ffffff, #FFAAAA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.2s;
+        }
+        
+        .stat-card:hover .stat-value {
+            transform: scale(1.1);
+            animation: pulse 1s infinite;
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+        
+        .stat-card:hover .stat-label {
+            color: var(--accent);
+        }
+        
+        /* Ayırıcı çizgi */
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            border: none;
+            margin: 20px 0;
+            width: 100%;
+            position: relative;
+            animation: expand 1s ease-out;
+        }
+
+        @keyframes expand {
+            from { width: 0; opacity: 0; }
+            to { width: 100%; opacity: 1; }
+        }
+        
+        .divider::after {
+            content: '⚡';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-color);
+            padding: 0 10px;
+            color: var(--accent);
+            font-size: 1rem;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding-bottom: 15px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background-color: rgba(20, 20, 20, 0.5);
+            border-radius: 10px;
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .small-passonis {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        
+        .discord-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: block;
+            margin-top: 3px;
+            transition: all 0.2s;
+        }
+        
+        .discord-link:hover {
+            text-shadow: 0 0 5px var(--accent);
+            animation: shake 0.5s ease infinite;
+        }
+        
+        /* Haber bölümü */
+        .news-section {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 1.5s ease-out, float 3s ease-in-out infinite;
+        }
+
+        /* Donate Panel Stilleri */
+        .donate-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .donate-panel.active {
+            display: block;
+        }
+
+        .donate-panel-content {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            position: relative;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .close-donate-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: var(--accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.5);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .close-donate-panel:hover {
+            transform: rotate(90deg);
+            color: white;
+            background: var(--accent);
+            animation: pulse 1s infinite;
+        }
+
+        /* Donate Kategorileri */
+        .donate-category {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .donate-category-header {
+            background: rgba(40, 40, 40, 0.9);
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            border-left: 4px solid;
+        }
+
+        .donate-category-header:hover {
+            background: rgba(50, 50, 50, 0.9);
+        }
+
+        /* Kategori renkleri */
+        .mansions-header { border-color: var(--mansion-color); }
+        .mechanics-header { border-color: var(--mechanic-color); }
+        .social-header { border-color: var(--social-color); }
+        .estate-header { border-color: var(--estate-color); }
+        .gunshop-header { border-color: var(--gun-color); }
+        .illegal-header { border-color: var(--illegal-color); }
+
+        .donate-category-header.active {
+            background: rgba(60, 60, 60, 0.9);
+        }
+
+        .mansions-header.active { border-left-color: var(--mansion-color); }
+        .mechanics-header.active { border-left-color: var(--mechanic-color); }
+        .social-header.active { border-left-color: var(--social-color); }
+        .estate-header.active { border-left-color: var(--estate-color); }
+        .gunshop-header.active { border-left-color: var(--gun-color); }
+        .illegal-header.active { border-left-color: var(--illegal-color); }
+
+        .donate-category-icon {
+            transition: transform 0.3s;
+        }
+
+        .donate-category-header.active .donate-category-icon {
+            transform: rotate(180deg);
+        }
+
+        .donate-property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            padding: 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+
+        .donate-category-header.active + .donate-property-grid {
+            max-height: 2000px;
+            padding: 15px;
+        }
+
+        .donate-property-slot {
+            background: rgba(50, 50, 50, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: slotAppear 0.5s forwards;
+            border-top: 3px solid;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .mansions-slot { border-color: var(--mansion-color); }
+        .mechanics-slot { border-color: var(--mechanic-color); }
+        .social-slot { border-color: var(--social-color); }
+        .estate-slot { border-color: var(--estate-color); }
+        .gunshop-slot { border-color: var(--gun-color); }
+        .illegal-slot { border-color: var(--illegal-color); }
+
+        @keyframes slotAppear {
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .donate-property-slot:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .mansions-slot:hover { box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3); }
+        .mechanics-slot:hover { box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); }
+        .social-slot:hover { box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3); }
+        .estate-slot:hover { box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); }
+        .gunshop-slot:hover { box-shadow: 0 5px 15px rgba(255, 165, 0, 0.3); }
+        .illegal-slot:hover { box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3); }
+
+        .property-image {
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .property-image img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .property-info {
+            text-align: center;
+        }
+
+        .property-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .property-price {
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .property-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .status-available {
+            color: #2ecc71;
+        }
+
+        .status-sold {
+            color: #e74c3c;
+        }
+
+        /* Property Modal */
+        .property-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: rgba(40, 40, 40, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--accent);
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-details {
+            margin-top: 15px;
+        }
+
+        .modal-details p {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive ayarlar */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .neon-title {
+                font-size: 1.5rem;
+                padding: 8px 20px;
+            }
+            
+            .category-tab, .donate-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .user-list {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .stat-card {
+                min-width: 100px;
+                padding: 10px;
+            }
+
+            .donate-property-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .donate-property-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-container">
+            <div class="neon-title">PRESSDNIS V</div>
+            
+            <div class="category-container">
+                <div class="category-bar">
+                    <div class="category-tab active" onclick="showContent('stats')">İstatistikler</div>
+                    <div class="category-tab" onclick="showContent('server-info')">Sunucu Bilgileri</div>
+                    <div class="category-tab" onclick="showContent('donate')">Donate</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="stats" class="dynamic-content active">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value">51+</div>
+                    <div class="stat-label">WEB TOPLIPH TYPE</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">51s</div>
+                    <div class="stat-label">WIRELESS BOYFB</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">/nan/</div>
+                    <div class="stat-label">SERVER BACKIES</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">51i+</div>
+                    <div class="stat-label">RIGHT SYMPODE</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">DISCODE</div>
+                    <div class="stat-label">LAVE BOYFB</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="server-info" class="dynamic-content server-info">
+            <div class="info-section">
+                <div class="info-title">Kurucular</div>
+                <div class="user-list">
+                    <div class="user-card">
+                        <div class="user-name">ADMIN_KRAL</div>
+                        <div class="user-rank">Kurucu & Geliştirici</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">TEKNO_LORD</div>
+                        <div class="user-rank">Kurucu & Sistem Uzmanı</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">Adminler</div>
+                <div class="user-list">
+                    <div class="user-card">
+                        <div class="user-name">MOD_X</div>
+                        <div class="user-rank">Kıdemli Admin</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">SIBER_SAVASCI</div>
+                        <div class="user-rank">Teknik Admin</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">GUUVENLIK_01</div>
+                        <div class="user-rank">Güvenlik Admini</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">Rütbeler</div>
+                <div class="user-list">
+                    <div class="user-card">
+                        <div class="user-name">V.I.P</div>
+                        <div class="user-rank">Premium Üye</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">BOOSTER</div>
+                        <div class="user-rank">Sunucu Destekçisi</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">AKTIF_UYE</div>
+                        <div class="user-rank">Düzenli Katılımcı</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">ELITE</div>
+                        <div class="user-rank">Seçkin Üye</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">DONATOR</div>
+                        <div class="user-rank">Bağışçı Üye</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">MOD_ADAY</div>
+                        <div class="user-rank">Moderator Adayı</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">STREAMER</div>
+                        <div class="user-rank">Yayıncı</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">CONTENT_CREATOR</div>
+                        <div class="user-rank">İçerik Üretici</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">OG</div>
+                        <div class="user-rank">Eski Okul Üye</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">BOT_DEVELOPER</div>
+                        <div class="user-rank">Bot Geliştirici</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">EVENT_MANAGER</div>
+                        <div class="user-rank">Etkinlik Yöneticisi</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">TRANSLATOR</div>
+                        <div class="user-rank">Çevirmen</div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-name">HELPER</div>
+                        <div class="user-rank">Yardımcı Üye</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="donate" class="dynamic-content donate-section">
+            <h3>PRESSDNISV Donate</h3>
+            <p>Sunucumuzdaki Rolleinize Katkıda Bulunun.</p>
+            
+            <div class="payment-methods">
+                <p><strong>Bilgilendirme:</strong></p>
+                <p>Satın Alımlar için Discord Üzerinden İletişime Geçin </p>
+            </div>
+            
+            <button class="donate-btn" onclick="openDonatePanel()">Donate Bilgi</button>
+        </div>
+
+        <hr class="divider">
+
+        <div class="footer">
+            <span class="small-passonis">PRESSDNIS V</span>
+            <a href="https://discond.grip.com/" class="discord-link">https://discond.grip.com/</a>
+        </div>
+
+        <div class="news-section">
+            NEWS & GENIERS
+        </div>
+    </div>
+
+    <!-- Passonis Donate Panel -->
+    <div id="donatePanel" class="donate-panel">
+        <div class="donate-panel-content">
+            <span class="close-donate-panel" onclick="closeDonatePanel()">×</span>
+            <div class="neon-title" style="margin-bottom: 20px;">PRESSDNIS V - DONATE PANEL</div>
+
+            <!-- Malikaneler Kategorisi -->
+            <div class="donate-category">
+                <div class="donate-category-header mansions-header" onclick="toggleDonateCategory(this)">
+                    <span>Malikaneler</span>
+                    <span class="donate-category-icon">▼</span>
+                </div>
+                <div class="donate-property-grid">
+                    <div class="donate-property-slot mansions-slot" onclick="showPropertyModal('Villa Aurora', '$2,500,000', 'SATILIK', 'mansions')">
+                        <div class="property-image mansions-image">
+                            <img src="https://via.placeholder.com/300x200/333333/9B59B6?text=Villa+Aurora" alt="Villa Aurora">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Villa Aurora</div>
+                            <div class="property-price">$2,500,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot mansions-slot" onclick="showPropertyModal('Luxury Mansion', '$3,200,000', 'SATILIK', 'mansions')">
+                        <div class="property-image mansions-image">
+                            <img src="https://via.placeholder.com/300x200/333333/9B59B6?text=Luxury+Mansion" alt="Luxury Mansion">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Luxury Mansion</div>
+                            <div class="property-price">$3,200,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot mansions-slot" onclick="showPropertyModal('Hillside Villa', '$2,800,000', 'SATILIK', 'mansions')">
+                        <div class="property-image mansions-image">
+                            <img src="https://via.placeholder.com/300x200/333333/9B59B6?text=Hillside+Villa" alt="Hillside Villa">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Hillside Villa</div>
+                            <div class="property-price">$2,800,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mekanikler Kategorisi -->
+            <div class="donate-category">
+                <div class="donate-category-header mechanics-header" onclick="toggleDonateCategory(this)">
+                    <span>Mekanikler</span>
+                    <span class="donate-category-icon">▼</span>
+                </div>
+                <div class="donate-property-grid">
+                    <div class="donate-property-slot mechanics-slot" onclick="showPropertyModal('Speed Garage', '$750,000', 'SATILIK', 'mechanics')">
+                        <div class="property-image mechanics-image">
+                            <img src="https://via.placeholder.com/300x200/333333/3498DB?text=Speed+Garage" alt="Speed Garage">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Speed Garage</div>
+                            <div class="property-price">$750,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot mechanics-slot" onclick="showPropertyModal('Tuner Shop', '$850,000', 'SATILIK', 'mechanics')">
+                        <div class="property-image mechanics-image">
+                            <img src="https://via.placeholder.com/300x200/333333/3498DB?text=Tuner+Shop" alt="Tuner Shop">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Tuner Shop</div>
+                            <div class="property-price">$850,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot mechanics-slot" onclick="showPropertyModal('Classic Cars', '$950,000', 'SATILIK', 'mechanics')">
+                        <div class="property-image mechanics-image">
+                            <img src="https://via.placeholder.com/300x200/333333/3498DB?text=Classic+Cars" alt="Classic Cars">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Classic Cars</div>
+                            <div class="property-price">$950,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arabalar Kategorisi - Added at the top -->
+                <div class="donate-category">
+                    <div class="donate-category-header cars-header" onclick="toggleDonateCategory(this)">
+                        <span>Arabalar</span>
+                        <span class="donate-category-icon">▼</span>
+                    </div>
+                    <div class="donate-property-grid">
+                        <div class="donate-property-slot cars-slot" onclick="showPropertyModal('Bugatti Chiron', '$2,800,000', 'SATILIK', 'cars')">
+                            <div class="property-image">
+                                <img src="https://via.placeholder.com/300x200/333333/1ABC9C?text=Bugatti+Chiron" alt="Bugatti Chiron">
+                            </div>
+                            <div class="property-info">
+                                <div class="property-name">Bugatti Chiron</div>
+                                <div class="property-price">$2,800,000</div>
+                            </div>
+                            <div class="property-status status-available">SATILIK</div>
+                        </div>
+                        <div class="donate-property-slot cars-slot" onclick="showPropertyModal('Lamborghini Aventador', '$1,500,000', 'SATILIK', 'cars')">
+                            <div class="property-image">
+                                <img src="https://via.placeholder.com/300x200/333333/1ABC9C?text=Lamborghini+Aventador" alt="Lamborghini Aventador">
+                            </div>
+                            <div class="property-info">
+                                <div class="property-name">Lamborghini Aventador</div>
+                                <div class="property-price">$1,500,000</div>
+                            </div>
+                            <div class="property-status status-available">SATILIK</div>
+                        </div>
+                        <div class="donate-property-slot cars-slot" onclick="showPropertyModal('Ferrari 488 GTB', '$1,200,000', 'SATILIK', 'cars')">
+                            <div class="property-image">
+                                <img src="https://via.placeholder.com/300x200/333333/1ABC9C?text=Ferrari+488+GTB" alt="Ferrari 488 GTB">
+                            </div>
+                            <div class="property-info">
+                                <div class="property-name">Ferrari 488 GTB</div>
+                                <div class="property-price">$1,200,000</div>
+                            </div>
+                            <div class="property-status status-available">SATILIK</div>
+                        </div>
+                        <div class="donate-property-slot cars-slot" onclick="showPropertyModal('Rolls Royce Phantom', '$1,800,000', 'SATILIK', 'cars')">
+                            <div class="property-image">
+                                <img src="https://via.placeholder.com/300x200/333333/1ABC9C?text=Rolls+Royce+Phantom" alt="Rolls Royce Phantom">
+                            </div>
+                            <div class="property-info">
+                                <div class="property-name">Rolls Royce Phantom</div>
+                                <div class="property-price">$1,800,000</div>
+                            </div>
+                            <div class="property-status status-available">SATILIK</div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Sosyal Mekanlar Kategorisi -->
+            <div class="donate-category">
+                <div class="donate-category-header social-header" onclick="toggleDonateCategory(this)">
+                    <span>Sosyal Mekanlar</span>
+                    <span class="donate-category-icon">▼</span>
+                </div>
+                <div class="donate-property-grid">
+                    <div class="donate-property-slot social-slot" onclick="showPropertyModal('Eclipse Towers Club', '$2,800,000', 'SATILIK', 'social')">
+                        <div class="property-image social-image">
+                            <img src="https://via.placeholder.com/300x200/333333/00BFFF?text=Eclipse+Towers+Club" alt="Eclipse Towers Club">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Eclipse Towers Club</div>
+                            <div class="property-price">$2,800,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot social-slot" onclick="showPropertyModal('VIP Lounge', '$1,500,000', 'SATILIK', 'social')">
+                        <div class="property-image social-image">
+                            <img src="https://via.placeholder.com/300x200/333333/00BFFF?text=VIP+Lounge" alt="VIP Lounge">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">VIP Lounge</div>
+                            <div class="property-price">$1,500,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot social-slot" onclick="showPropertyModal('Beach Club', '$2,200,000', 'SATILIK', 'social')">
+                        <div class="property-image social-image">
+                            <img src="https://via.placeholder.com/300x200/333333/00BFFF?text=Beach+Club" alt="Beach Club">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Beach Club</div>
+                            <div class="property-price">$2,200,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emlaklar Kategorisi -->
+            <div class="donate-category">
+                <div class="donate-category-header estate-header" onclick="toggleDonateCategory(this)">
+                    <span>Emlaklar</span>
+                    <span class="donate-category-icon">▼</span>
+                </div>
+                <div class="donate-property-grid">
+                    <div class="donate-property-slot estate-slot" onclick="showPropertyModal('Modern Apartment', '$1,200,000', 'SATILIK', 'estate')">
+                        <div class="property-image estate-image">
+                            <img src="https://via.placeholder.com/300x200/333333/2ECC71?text=Modern+Apartment" alt="Modern Apartment">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Modern Apartment</div>
+                            <div class="property-price">$1,200,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot estate-slot" onclick="showPropertyModal('Penthouse Suite', '$1,800,000', 'SATILIK', 'estate')">
+                        <div class="property-image estate-image">
+                            <img src="https://via.placeholder.com/300x200/333333/2ECC71?text=Penthouse+Suite" alt="Penthouse Suite">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Penthouse Suite</div>
+                            <div class="property-price">$1,800,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot estate-slot" onclick="showPropertyModal('Lakeside House', '$1,500,000', 'SATILIK', 'estate')">
+                        <div class="property-image estate-image">
+                            <img src="https://via.placeholder.com/300x200/333333/2ECC71?text=Lakeside+House" alt="Lakeside House">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Lakeside House</div>
+                            <div class="property-price">$1,500,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gun Shoplar Kategorisi -->
+            <div class="donate-category">
+                <div class="donate-category-header gunshop-header" onclick="toggleDonateCategory(this)">
+                    <span>Gun Shoplar</span>
+                    <span class="donate-category-icon">▼</span>
+                </div>
+                <div class="donate-property-grid">
+                    <div class="donate-property-slot gunshop-slot" onclick="showPropertyModal('Black Market Arms', '$1,200,000', 'SATILIK', 'gunshop')">
+                        <div class="property-image gunshop-image">
+                            <img src="https://via.placeholder.com/300x200/333333/FFA500?text=Black+Market+Arms" alt="Black Market Arms">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Black Market Arms</div>
+                            <div class="property-price">$1,200,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot gunshop-slot" onclick="showPropertyModal('Ammu-Nation', '$950,000', 'SATILIK', 'gunshop')">
+                        <div class="property-image gunshop-image">
+                            <img src="https://via.placeholder.com/300x200/333333/FFA500?text=Ammu-Nation" alt="Ammu-Nation">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Ammu-Nation</div>
+                            <div class="property-price">$950,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot gunshop-slot" onclick="showPropertyModal('Special Ops', '$1,500,000', 'SATILIK', 'gunshop')">
+                        <div class="property-image gunshop-image">
+                            <img src="https://via.placeholder.com/300x200/333333/FFA500?text=Special+Ops" alt="Special Ops">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Special Ops</div>
+                            <div class="property-price">$1,500,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- İllegal Meslekler Kategorisi -->
+            <div class="donate-category">
+                <div class="donate-category-header illegal-header" onclick="toggleDonateCategory(this)">
+                    <span>İllegal Meslekler</span>
+                    <span class="donate-category-icon">▼</span>
+                </div>
+                <div class="donate-property-grid">
+                    <div class="donate-property-slot illegal-slot" onclick="showPropertyModal('Underground Lab', '$3,500,000', 'SATILIK', 'illegal')">
+                        <div class="property-image illegal-image">
+                            <img src="https://via.placeholder.com/300x200/333333/E74C3C?text=Underground+Lab" alt="Underground Lab">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Underground Lab</div>
+                            <div class="property-price">$3,500,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot illegal-slot" onclick="showPropertyModal('Smuggler\'s Den', '$2,800,000', 'SATILIK', 'illegal')">
+                        <div class="property-image illegal-image">
+                            <img src="https://via.placeholder.com/300x200/333333/E74C3C?text=Smuggler's+Den" alt="Smuggler's Den">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Smuggler's Den</div>
+                            <div class="property-price">$2,800,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                    <div class="donate-property-slot illegal-slot" onclick="showPropertyModal('Cartel Base', '$4,000,000', 'SATILIK', 'illegal')">
+                        <div class="property-image illegal-image">
+                            <img src="https://via.placeholder.com/300x200/333333/E74C3C?text=Cartel+Base" alt="Cartel Base">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-name">Cartel Base</div>
+                            <div class="property-price">$4,000,000</div>
+                        </div>
+                        <div class="property-status status-available">SATILIK</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Property Detay Modalı -->
+    <div id="propertyModal" class="property-modal">
+        <div class="modal-content" id="modalContent">
+            <span class="close-modal" onclick="closeModal()">×</span>
+            <h2 id="modalTitle">Black Market Arms</h2>
+            <div class="modal-image-container">
+                <img id="modalImage" src="" alt="Property Image" style="width:100%; border-radius:8px; margin:10px 0;">
+            </div>
+            <div class="modal-details">
+                <p><strong>Fiyat:</strong> <span id="modalPrice">$1,200,000</span></p>
+                <p><strong>Durum:</strong> <span id="modalStatus">SATILIK</span></p>
+                <p><strong>Lokasyon:</strong> <span id="modalLocation">Gizli Lokasyon</span></p>
+                <p><strong>Özellikler:</strong> <span id="modalFeatures">Özel silah erişimi, Gizli depo, Güvenli oda</span></p>
+            </div>
+            <button class="donate-btn" style="margin-top:15px; width:100%; padding:10px; background:var(--accent); border:none; color:white; border-radius:5px; cursor:pointer;">Bilgi Almak İçin Discord Sunucumuza Bekleriz</button>
+        </div>
+    </div>
+
+    <script>
+        function showContent(contentId) {
+            document.querySelectorAll('.dynamic-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(contentId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.05)';
+                this.style.boxShadow = '0 8px 15px rgba(0,0,0,0.3), var(--glow)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            });
+        });
+
+        // Passonis Donate Panel Fonksiyonları
+        function openDonatePanel() {
+            document.getElementById('donatePanel').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDonatePanel() {
+            document.getElementById('donatePanel').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Donate Kategori aç/kapa fonksiyonu
+        function toggleDonateCategory(header) {
+            header.classList.toggle('active');
+            const icon = header.querySelector('.donate-category-icon');
+            const grid = header.nextElementSibling;
+            
+            if(header.classList.contains('active')) {
+                grid.style.maxHeight = grid.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+                
+                // Slot animasyonlarını tetikle
+                const slots = grid.querySelectorAll('.donate-property-slot');
+                slots.forEach((slot, index) => {
+                    slot.style.animationDelay = `${index * 0.1}s`;
+                    slot.style.animationName = 'slotAppear';
+                });
+            } else {
+                grid.style.maxHeight = '0';
+                grid.style.padding = '0 15px';
+                icon.style.transform = 'rotate(0)';
+            }
+        }
+        
+        // Modal göster fonksiyonu
+        function showPropertyModal(name, price, status, type) {
+            const modal = document.getElementById('propertyModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            // Modal tema ayarı
+            modalContent.className = 'modal-content';
+            if(type === 'mansions') {
+                modalContent.classList.add('mansions-modal');
+                document.getElementById('modalLocation').textContent = 'Lüks Bölge';
+                document.getElementById('modalFeatures').textContent = '5 Yatak Odası, 3 Banyo, Havuz, Helipad';
+            } else if(type === 'mechanics') {
+                modalContent.classList.add('mechanics-modal');
+                document.getElementById('modalLocation').textContent = 'Endüstriyel Bölge';
+                document.getElementById('modalFeatures').textContent = '2 Lift, Araç Depolama, Özel Araç Modifikasyon';
+            } else if(type === 'social') {
+                modalContent.classList.add('social-modal');
+                document.getElementById('modalLocation').textContent = 'Şehir Merkezi';
+                document.getElementById('modalFeatures').textContent = 'Bar, Dans pisti, VIP lounge';
+            } else if(type === 'estate') {
+                modalContent.classList.add('estate-modal');
+                document.getElementById('modalLocation').textContent = 'Residans Bölgesi';
+                document.getElementById('modalFeatures').textContent = '3 Yatak Odası, 2 Banyo, Geniş Balkon';
+            } else if(type === 'gunshop') {
+                modalContent.classList.add('gunshop-modal');
+                document.getElementById('modalLocation').textContent = 'Gizli Lokasyon';
+                document.getElementById('modalFeatures').textContent = 'Özel silah erişimi, Gizli depo, Güvenli oda';
+            } else if(type === 'illegal') {
+                modalContent.classList.add('illegal-modal');
+                document.getElementById('modalLocation').textContent = 'Gizli Üs';
+                document.getElementById('modalFeatures').textContent = 'Yüksek güvenlik, Gizli tüneller, 24/7 gözetim';
+            } else if(type === 'cars') {
+                modalContent.classList.add('cars-modal');
+                document.getElementById('modalLocation').textContent = 'Garaj';
+                document.getElementById('modalFeatures').textContent = 'Özel plaka, Full modifiye'; 
+            }
+            
+            // İçerik doldurma
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalPrice').textContent = price;
+            document.getElementById('modalStatus').textContent = status;
+            document.getElementById('modalImage').src = event.currentTarget.querySelector('img').src;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Modal kapatma fonksiyonu
+        function closeModal() {
+            document.getElementById('propertyModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Dışarı tıklayarak kapatma
+        window.onclick = function(event) {
+            const modal = document.getElementById('propertyModal');
+            const donatePanel = document.getElementById('donatePanel');
+            
+            if(event.target == modal) {
+                closeModal();
+            }
+            
+            if(event.target == donatePanel) {
+                closeDonatePanel();
+            }
+        }
+
+        // Sayfa yüklendiğinde ilk kategoriyi aç
+        window.onload = function() {
+            // İlk kategoriyi aç
+            const firstCategory = document.querySelector('.donate-category-header');
+            if (firstCategory) {
+                toggleDonateCategory(firstCategory);
+            }
+        };
+
+
+
+    </script>
+</body>
+</html>
+
